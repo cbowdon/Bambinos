@@ -36,7 +36,8 @@ module.exports = function (grunt) {
                 expand: true,
                 src: [
                   'node_modules/mithril/mithril.js',
-                  'build/*.js'
+                  'build/*.js',
+                  'build/*.d.ts'
                 ],
                 dest: 'dist/',
                 flatten: true
