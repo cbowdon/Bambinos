@@ -39,8 +39,8 @@ module.exports = function (grunt) {
                   'node_modules/moment/moment.js',
                   'node_modules/underscore/underscore.js',
                   // Ran once, now in SC
-                  //'bower_components/bootstrap/dist/js/bootstrap.min.js',
-                  //'bower_components/jquery/dist/jquery.min.js',
+                  'bower_components/bootstrap/dist/js/bootstrap.min.js',
+                  'bower_components/jquery/dist/jquery.min.js',
                   'build/*.js',
                   'build/*.d.ts',
                   'src/*.js'
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
                 expand: true,
                 src: [
                   // Ran once, now in SC
-                  //'bower_components/bootstrap/dist/css/bootstrap.min.css',
+                  'bower_components/bootstrap/dist/css/bootstrap.min.css',
                 ],
                 dest: 'dist/css',
                 flatten: true
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
                 expand: true,
                 src: [
                   // Ran once, now in SC
-                  //'bower_components/bootstrap/dist/fonts/*',
+                  'bower_components/bootstrap/dist/fonts/*',
                 ],
                 dest: 'dist/fonts',
                 flatten: true

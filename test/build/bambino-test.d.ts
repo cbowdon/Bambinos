@@ -25,9 +25,14 @@ declare module Bambino.Model {
     }
 }
 declare module Bambino.View {
-    function row(id: number, options: HTMLOptionElement[], selection: MithrilProp<string>): MithrilVirtualElement;
+    function row(id: number, options: HTMLOptionElement[], rowData: RowData, clicker: () => any): MithrilVirtualElement;
 }
 declare module Bambino {
+    interface RowData {
+        selection: MithrilProp<string>;
+        date: MithrilProp<string>;
+        time: MithrilProp<string>;
+    }
     function controller(): void;
     function view(ctrl: any): MithrilVirtualElement;
 }

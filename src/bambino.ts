@@ -86,6 +86,7 @@ module Bambino.Model {
 }
 
 module Bambino.View {
+    'use strict';
 
     function selectEvent(prop: MithrilProp<string>, options: HTMLOptionElement[]) {
         return m('div.form-group', [
@@ -95,28 +96,30 @@ module Bambino.View {
         ]);
     }
 
-    function inputDate() {
+    function inputDate(prop: MithrilProp<string>) {
         return m('div.form-group', [
-            m('input.form-control.date[type="date"][placeholder="Date"]', { value: moment().format('YYYY-MM-DD') }),
+            m('input.form-control.date[type="date"][placeholder="Date"]', 
+                { onchange: m.withAttr('value', prop), value: prop() }),
         ]);
     }
 
-    function inputTime() {
+    function inputTime(prop: MithrilProp<string>) {
         return m('div.form-group', [
-            m('input.form-control.time[type="time"][placeholder="Time"]', { value: moment().format('HH:MM') }),
+            m('input.form-control.time[type="time"][placeholder="Time"]', 
+                { onchange: m.withAttr('value', prop), value: prop() }),
         ]);
     }
 
-    export function row(id: number, options: HTMLOptionElement[], selection: MithrilProp<string>) {
+    export function row(id: number, options: HTMLOptionElement[], rowData: RowData, clicker: () => any) {
         return m('div#entry' + id, [
             m('form#entry-form' + id + '.form-inline[action="#"]', [
-                selectEvent(selection, options),
-                inputDate(),
-                inputTime(),
-                m('button.btn.btn-default[type="submit"]', [
-                    m('span.glyphicon.glyphicon-add', ' '),
-                    '+'
-                ]),
+                selectEvent(rowData.selection, options),
+                inputDate(rowData.date),
+                inputTime(rowData.time),
+                m('button.btn.btn-default[type="submit"]', 
+                    { onclick: clicker },
+                    [ m('span.glyphicon.glyphicon-add', ' '), '+' ]
+                ), 
             ])
         ]);
     }
@@ -124,15 +127,28 @@ module Bambino.View {
 
 module Bambino {
     'use strict';
+    
+    export interface RowData {
+        selection: MithrilProp<string>;
+        date: MithrilProp<string>;
+        time: MithrilProp<string>;
+    }
 
     export function controller() {
-        this.selection = m.prop('dummy');
+        this.rowData = {
+            selection: m.prop('dummy'),
+            date: m.prop('date'),
+            time: m.prop('time')
+        };
         this.events = function () {
             return _.map(Model.events, n => { return { text: n, value: n } });
+        };
+        this.add = () => {
+            console.log(this.rowData);
         };
     }
 
     export function view(ctrl: any) {
-        return View.row(0, ctrl.events(), ctrl.selection);
+        return View.row(0, ctrl.events(), ctrl.rowData, ctrl.add);
     }
 }

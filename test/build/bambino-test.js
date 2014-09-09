@@ -89,6 +89,8 @@ var Bambino;
 var Bambino;
 (function (Bambino) {
     (function (View) {
+        'use strict';
+
         function selectEvent(prop, options) {
             return m('div.form-group', [
                 m('select.form-control.babyEvent', { onchange: m.withAttr('value', prop) }, options.map(function (o) {
@@ -97,28 +99,25 @@ var Bambino;
             ]);
         }
 
-        function inputDate() {
+        function inputDate(prop) {
             return m('div.form-group', [
-                m('input.form-control.date[type="date"][placeholder="Date"]', { value: moment().format('YYYY-MM-DD') })
+                m('input.form-control.date[type="date"][placeholder="Date"]', { onchange: m.withAttr('value', prop), value: prop() })
             ]);
         }
 
-        function inputTime() {
+        function inputTime(prop) {
             return m('div.form-group', [
-                m('input.form-control.time[type="time"][placeholder="Time"]', { value: moment().format('HH:MM') })
+                m('input.form-control.time[type="time"][placeholder="Time"]', { onchange: m.withAttr('value', prop), value: prop() })
             ]);
         }
 
-        function row(id, options, selection) {
+        function row(id, options, rowData, clicker) {
             return m('div#entry' + id, [
                 m('form#entry-form' + id + '.form-inline[action="#"]', [
-                    selectEvent(selection, options),
-                    inputDate(),
-                    inputTime(),
-                    m('button.btn.btn-default[type="submit"]', [
-                        m('span.glyphicon.glyphicon-add', ' '),
-                        '+'
-                    ])
+                    selectEvent(rowData.selection, options),
+                    inputDate(rowData.date),
+                    inputTime(rowData.time),
+                    m('button.btn.btn-default[type="submit"]', { onclick: clicker }, [m('span.glyphicon.glyphicon-add', ' '), '+'])
                 ])
             ]);
         }
@@ -132,17 +131,25 @@ var Bambino;
     'use strict';
 
     function controller() {
-        this.selection = m.prop('dummy');
+        var _this = this;
+        this.rowData = {
+            selection: m.prop('dummy'),
+            date: m.prop('date'),
+            time: m.prop('time')
+        };
         this.events = function () {
             return _.map(Bambino.Model.events, function (n) {
                 return { text: n, value: n };
             });
         };
+        this.add = function () {
+            console.log(_this.rowData);
+        };
     }
     Bambino.controller = controller;
 
     function view(ctrl) {
-        return Bambino.View.row(0, ctrl.events(), ctrl.selection);
+        return Bambino.View.row(0, ctrl.events(), ctrl.rowData, ctrl.add);
     }
     Bambino.view = view;
 })(Bambino || (Bambino = {}));
