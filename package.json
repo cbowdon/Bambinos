@@ -6,7 +6,8 @@
   "dependencies": {
     "mithril": "^0.1.21",
     "moment": "^2.8.3",
-    "tsmonad": "^0.3.0"
+    "tsmonad": "^0.3.0",
+    "underscore": "^1.7.0"
   },
   "devDependencies": {
     "blanket": "^1.1.6",

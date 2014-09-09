@@ -5,12 +5,26 @@
 module Bambino.Model {
     'use strict';
 
-    export enum EventType { WokeUp, FellAsleep, AteMeal, AteSnack, DrankWater, DrankMilk, Pooped }
+    export interface EventType {
+        [name: string]: string;
+    }
+
+    // TODO load dynamically from JSON File
+    export var events: EventType = {
+        wokeUp: 'Woke up',
+        fellAsleep: 'Fell asleep',
+        ateMeal: 'Ate meal',
+        ateSnack: 'Ate a snack',
+        drankWater: 'Drank water',
+        drankMilk: 'Drank milk',
+        pooped: 'Pooped',
+        hadBath: 'Had a bath'
+    };
 
     export class BabyEvent {
-        type: MithrilProp<EventType>;
+        type: MithrilProp<string>;
         time: MithrilProp<Moment>;
-        constructor(type: EventType, time: Moment) {
+        constructor(type: string, time: Moment) {
             this.type = m.prop(type);
             this.time = m.prop(time);
         }
@@ -71,7 +85,37 @@ module Bambino.Model {
     }
 }
 
-module Bambino.Controller {
+module Bambino.View {
+
+    export function row(id: number, options: HTMLOptionElement[], selection: MithrilProp<string>) {
+        return m('div#row' + id, [
+            m('form.form-inline[action="#"]', [
+                m('div.form-group', [
+                    m('select.form-control.babyEvent', { onchange: m.withAttr('value', selection) }, options.map(o => m('option[value=' + o.value + ']', o.text))),
+                ]),
+                m('div.form-group', [
+                    m('input.form-control.time[type="datetime"][placeholder="Time"]'),
+                ]),
+                m('button.btn.btn-default[type="submit"]', [
+                    m('span.glyphicon.glyphicon-add', ' '),
+                    '+'
+                ]),
+            ])
+        ]);
+    }
+}
+
+module Bambino {
     'use strict';
 
+    export function controller() {
+        this.selection = m.prop('dummy');
+        this.events = function () {
+            return _.map(Model.events, n => { return { text: n, value: n } });
+        };
+    }
+
+    export function view(ctrl: any) {
+        return View.row(0, ctrl.events(), ctrl.selection);
+    }
 }

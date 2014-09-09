@@ -6,16 +6,17 @@ var Bambino;
     (function (Model) {
         'use strict';
 
-        (function (EventType) {
-            EventType[EventType["WokeUp"] = 0] = "WokeUp";
-            EventType[EventType["FellAsleep"] = 1] = "FellAsleep";
-            EventType[EventType["AteMeal"] = 2] = "AteMeal";
-            EventType[EventType["AteSnack"] = 3] = "AteSnack";
-            EventType[EventType["DrankWater"] = 4] = "DrankWater";
-            EventType[EventType["DrankMilk"] = 5] = "DrankMilk";
-            EventType[EventType["Pooped"] = 6] = "Pooped";
-        })(Model.EventType || (Model.EventType = {}));
-        var EventType = Model.EventType;
+        // TODO load dynamically from JSON File
+        Model.events = {
+            wokeUp: 'Woke up',
+            fellAsleep: 'Fell asleep',
+            ateMeal: 'Ate meal',
+            ateSnack: 'Ate a snack',
+            drankWater: 'Drank water',
+            drankMilk: 'Drank milk',
+            pooped: 'Pooped',
+            hadBath: 'Had a bath'
+        };
 
         var BabyEvent = (function () {
             function BabyEvent(type, time) {
@@ -87,10 +88,48 @@ var Bambino;
 
 var Bambino;
 (function (Bambino) {
-    (function (Controller) {
-        'use strict';
-    })(Bambino.Controller || (Bambino.Controller = {}));
-    var Controller = Bambino.Controller;
+    (function (View) {
+        function row(id, options, selection) {
+            return m('div#row' + id, [
+                m('form.form-inline[action="#"]', [
+                    m('div.form-group', [
+                        m('select.form-control.babyEvent', { onchange: m.withAttr('value', selection) }, options.map(function (o) {
+                            return m('option[value=' + o.value + ']', o.text);
+                        }))
+                    ]),
+                    m('div.form-group', [
+                        m('input.form-control.time[type="datetime"][placeholder="Time"]')
+                    ]),
+                    m('button.btn.btn-default[type="submit"]', [
+                        m('span.glyphicon.glyphicon-add', ' '),
+                        '+'
+                    ])
+                ])
+            ]);
+        }
+        View.row = row;
+    })(Bambino.View || (Bambino.View = {}));
+    var View = Bambino.View;
+})(Bambino || (Bambino = {}));
+
+var Bambino;
+(function (Bambino) {
+    'use strict';
+
+    function controller() {
+        this.selection = m.prop('dummy');
+        this.events = function () {
+            return _.map(Bambino.Model.events, function (n) {
+                return { text: n, value: n };
+            });
+        };
+    }
+    Bambino.controller = controller;
+
+    function view(ctrl) {
+        return Bambino.View.row(0, ctrl.events(), ctrl.selection);
+    }
+    Bambino.view = view;
 })(Bambino || (Bambino = {}));
 /// <reference path="../typings/tsd.d.ts" />
 /// <reference path="../src/bambino.ts" />
@@ -103,7 +142,7 @@ var Bambino;
             QUnit.test('History', function (assert) {
                 Model.History.clear(localStorage);
 
-                new Model.History(localStorage).add(new Model.BabyEvent(0 /* WokeUp */, moment('2014-09-08T06:00'))).add(new Model.BabyEvent(2 /* AteMeal */, moment('2014-09-08T07:00')));
+                new Model.History(localStorage).add(new Model.BabyEvent(Model.events['wokeUp'], moment('2014-09-08T06:00'))).add(new Model.BabyEvent(Model.events['ateMeal'], moment('2014-09-08T07:00')));
 
                 assert.ok(new Model.History(localStorage).caseOf({
                     history: function (evts) {

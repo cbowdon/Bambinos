@@ -10,6 +10,9 @@
     },
     "qunit/qunit.d.ts": {
       "commit": "50dd84eb5d5593787b7686decf1476d094f5e13a"
+    },
+    "underscore/underscore.d.ts": {
+      "commit": "50dd84eb5d5593787b7686decf1476d094f5e13a"
     }
   }
 }

@@ -8,8 +8,8 @@ module Bambino.Model.Test {
         History.clear(localStorage);
 
         new History(localStorage)
-            .add(new BabyEvent(EventType.WokeUp, moment('2014-09-08T06:00')))
-            .add(new BabyEvent(EventType.AteMeal, moment('2014-09-08T07:00')));
+            .add(new BabyEvent(events['wokeUp'], moment('2014-09-08T06:00')))
+            .add(new BabyEvent(events['ateMeal'], moment('2014-09-08T07:00')));
 
         assert.ok(new History(localStorage)
             .caseOf({

@@ -2,19 +2,14 @@
 /// <reference path="../../typings/tsd.d.ts" />
 /// <reference path="../../typings/mithril/mithril.d.ts" />
 declare module Bambino.Model {
-    enum EventType {
-        WokeUp = 0,
-        FellAsleep = 1,
-        AteMeal = 2,
-        AteSnack = 3,
-        DrankWater = 4,
-        DrankMilk = 5,
-        Pooped = 6,
+    interface EventType {
+        [name: string]: string;
     }
+    var events: EventType;
     class BabyEvent {
-        public type: MithrilProp<EventType>;
+        public type: MithrilProp<string>;
         public time: MithrilProp<Moment>;
-        constructor(type: EventType, time: Moment);
+        constructor(type: string, time: Moment);
     }
     interface HistoryPatterns<T> {
         history(evts: BabyEvent[]): T;
@@ -29,7 +24,12 @@ declare module Bambino.Model {
         public caseOf<T>(patterns: HistoryPatterns<T>): T;
     }
 }
-declare module Bambino.Controller {
+declare module Bambino.View {
+    function row(id: number, options: HTMLOptionElement[], selection: MithrilProp<string>): MithrilVirtualElement;
+}
+declare module Bambino {
+    function controller(): void;
+    function view(ctrl: any): MithrilVirtualElement;
 }
 declare module Bambino.Model.Test {
 }
