@@ -90,15 +90,18 @@ var Bambino;
 (function (Bambino) {
     (function (View) {
         function row(id, options, selection) {
-            return m('div#row' + id, [
-                m('form.form-inline[action="#"]', [
+            return m('div#entry' + id, [
+                m('form#entry-form' + id + '.form-inline[action="#"]', [
                     m('div.form-group', [
-                        m('select.form-control.babyEvent', { onchange: m.withAttr('value', selection) }, options.map(function (o) {
+                        m('select.form-control.babyEvent', options.map(function (o) {
                             return m('option[value=' + o.value + ']', o.text);
                         }))
                     ]),
                     m('div.form-group', [
-                        m('input.form-control.time[type="datetime"][placeholder="Time"]')
+                        m('input.form-control.date[type="date"][placeholder="Date"]', { value: moment().format('YYYY-MM-DD') })
+                    ]),
+                    m('div.form-group', [
+                        m('input.form-control.time[type="time"][placeholder="Time"]', { value: moment().format('HH:MM') })
                     ]),
                     m('button.btn.btn-default[type="submit"]', [
                         m('span.glyphicon.glyphicon-add', ' '),
