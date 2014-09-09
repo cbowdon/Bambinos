@@ -87,18 +87,32 @@ module Bambino.Model {
 
 module Bambino.View {
 
+    function selectEvent(prop: MithrilProp<string>, options: HTMLOptionElement[]) {
+        return m('div.form-group', [
+            m('select.form-control.babyEvent',
+                { onchange: m.withAttr('value', prop) },
+                options.map(o => m('option[value=' + o.value + ']', o.text))),
+        ]);
+    }
+
+    function inputDate() {
+        return m('div.form-group', [
+            m('input.form-control.date[type="date"][placeholder="Date"]', { value: moment().format('YYYY-MM-DD') }),
+        ]);
+    }
+
+    function inputTime() {
+        return m('div.form-group', [
+            m('input.form-control.time[type="time"][placeholder="Time"]', { value: moment().format('HH:MM') }),
+        ]);
+    }
+
     export function row(id: number, options: HTMLOptionElement[], selection: MithrilProp<string>) {
         return m('div#entry' + id, [
             m('form#entry-form' + id + '.form-inline[action="#"]', [
-                m('div.form-group', [
-                    m('select.form-control.babyEvent', options.map(o => m('option[value=' + o.value + ']', o.text))),
-                ]),
-                m('div.form-group', [
-                    m('input.form-control.date[type="date"][placeholder="Date"]', { value: moment().format('YYYY-MM-DD') }),
-                ]),
-                m('div.form-group', [
-                    m('input.form-control.time[type="time"][placeholder="Time"]', { value: moment().format('HH:MM') }),
-                ]),
+                selectEvent(selection, options),
+                inputDate(),
+                inputTime(),
                 m('button.btn.btn-default[type="submit"]', [
                     m('span.glyphicon.glyphicon-add', ' '),
                     '+'
